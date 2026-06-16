@@ -1,20 +1,18 @@
+import os
 import pandas as pd
 import time
-from selenium import webdriver
-import random # ### <<< Tambahkan import ini untuk fungsi acak
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
+import random
 from datetime import datetime
-# ### <<< INI ADALAH PERBAIKANNYA >>> ###
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-# Tambahkan import untuk WebDriverWait & ExpectedConditions
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 # --- KONFIGURASI ---
-FILE_DATA_PATH = 'filter simpus mei-agustus.xls' 
-URL_FORM = 'https://simkeswa.kemkes.go.id/form_skrining/dewasa'
+_ROOT          = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FILE_DATA_PATH = os.path.join(_ROOT, 'data', 'filter simpus mei-agustus.xls')
+URL_FORM       = 'https://simkeswa.kemkes.go.id/form_skrining/dewasa'
 
 # --- FUNGSI BANTU ---
 def ubah_format_tanggal(tanggal_obj):
@@ -57,7 +55,7 @@ try:
     # df.dropna(axis=1, how='all', inplace=True)
     # df.dropna(subset=['NKK / NIK'], inplace=True)
     # print("✅ Data berhasil dibersihkan. Nama kolom 'Kab' dan 'Kelurahan' sekarang seharusnya sudah benar.")
-     # --- CLEANING + FIX URUTAN ---
+    # --- CLEANING + FIX URUTAN ---
     df.dropna(axis=1, how='all', inplace=True)
     df.dropna(subset=['NKK / NIK'], inplace=True)
     df.reset_index(drop=True, inplace=True)   # <<< FIX urutan index
@@ -87,7 +85,7 @@ except Exception as e:
 # df_to_process = df.head(3)
 # Untuk memproses SEMUA baris, ganti baris di atas dengan yang ini (hapus tanda #):
 #gap nya (misal ATI HAYATI mau lanjut ke PONIJAH di 798, maka 798 - 6)
-df_to_process = df.iloc[792:]
+df_to_process = df.iloc[1500:]
 # ### <<< ------------------------------------ >>> ###
 # --- Inisialisasi Selenium sekali saja ---
 print("Mempersiapkan browser...")

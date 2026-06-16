@@ -1,0 +1,2674 @@
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+/>
+<center>
+  <h2 class="text-dark-blue mb-3">Form Skrining Online</h2>
+</center>
+<style>
+  .modal-dialog-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .select-readonly {
+    pointer-events: none; /* Mencegah user mengklik */
+    background-color: #e9ecef; /* Warna abu-abu seperti input disabled */
+    color: #6c757d; /* Warna teks disabled */
+    border: 1px solid #ced4da; /* Sesuai dengan input default Bootstrap */
+  }
+  .pilihan-item {
+    position: relative;
+    margin-bottom: 0.5rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .pilihan-item .form-check-label {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* padding kiri untuk ruang radio */
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .pilihan-item.selected {
+    background-color: #ebf3fd;
+    border-color: #0d6efd;
+  }
+
+  .pilihan-item.selected::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #001f4d;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+
+  .form-check-input {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    margin: 0;
+  }
+</style>
+<section>
+  <style>
+    .custom-navbar .nav-link {
+      font-family: "Poppins", sans-serif;
+      font-weight: 600 !important;
+      color: #2c3e50 !important;
+      font-size: 14px;
+      /* text-transform: uppercase; */
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      /* padding: 0.5rem 0.75rem !important; */
+      display: flex;
+      align-items: center;
+    }
+
+    .custom-navbar .nav-link:hover {
+      color: #3498db !important;
+      transform: translateY(-1px);
+      transition: all 0.3s ease;
+    }
+
+    .custom-navbar .dropdown-item {
+      font-family: "Poppins", sans-serif;
+      font-weight: 300 !important;
+      color: #34495e !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .custom-navbar .dropdown-item:hover {
+      font-weight: 300 !important;
+      background-color: #ecf0f1 !important;
+      color: #2980b9 !important;
+    }
+
+    /* Icon styling */
+    .custom-navbar .nav-link i {
+      margin-right: 5px;
+      min-width: 16px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .custom-navbar .dropdown-item i {
+      margin-right: 8px;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    /* Dropdown menu styling */
+    .custom-navbar .dropdown-menu {
+      min-width: 280px;
+      /* max-width: 450px; */
+      border: 1px solid #dee2e6;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      z-index: 1050;
+    }
+
+    /* Submenu styling - PENTING */
+    .dropdown-submenu {
+      position: relative;
+    }
+
+    .dropdown-submenu > .dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+      border-radius: 0 6px 6px 6px;
+      display: none;
+      z-index: 1051;
+    }
+
+    .dropdown-submenu.show > .dropdown-menu {
+      display: block !important;
+    }
+
+    .dropdown-submenu:hover > .dropdown-menu {
+      display: block;
+    }
+
+    /* Arrow indicator for submenu */
+    .dropdown-submenu > a:after {
+      display: block;
+      content: " ";
+      float: right;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      border-left-color: #ccc;
+      margin-top: 5px;
+      margin-right: -3px;
+    }
+
+    .dropdown-submenu:hover > a:after {
+      border-left-color: #fff;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .custom-navbar .nav-link {
+        font-size: 14px;
+        padding: 0.4rem 0.6rem !important;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .custom-navbar .nav-link {
+        font-size: 14px;
+        padding: 0.3rem 0.5rem !important;
+      }
+
+      .custom-navbar .dropdown-menu {
+        min-width: 250px;
+        max-width: 300px;
+      }
+    }
+
+    /* Mobile submenu fix */
+    @media (max-width: 767px) {
+      .dropdown-submenu > .dropdown-menu {
+        position: static !important;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        margin-left: 0;
+        background-color: #f8f9fa;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding-left: 20px;
+      }
+
+      .dropdown-submenu > a:after {
+        display: none;
+      }
+    }
+
+    /* Zoom handling */
+    @media screen and (min-resolution: 150dpi) {
+      .custom-navbar .nav-link {
+        font-size: 14px;
+        padding: 0.4rem 0.6rem !important;
+      }
+    }
+
+    @media screen and (min-resolution: 200dpi) {
+      .custom-navbar .nav-link {
+        font-size: 14px;
+        padding: 0.3rem 0.5rem !important;
+      }
+    }
+
+    /* Navbar collapse improvements - SCROLL DIHILANGKAN */
+    .custom-navbar .navbar-collapse {
+      overflow: visible;
+    }
+
+    .custom-navbar .navbar-nav {
+      flex-wrap: wrap;
+      overflow: visible;
+    }
+
+    /* User profile menu */
+    .custom-navbar .navbar-nav.ml-auto .nav-link {
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .custom-navbar .navbar-nav {
+        flex-direction: column;
+        width: 100%;
+        overflow: visible;
+      }
+
+      .custom-navbar .nav-link {
+        font-size: 14px;
+        padding: 0.75rem 1rem !important;
+        white-space: normal;
+      }
+
+      .custom-navbar .dropdown-menu {
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    /* Prevent text wrapping in navigation */
+    .custom-navbar .navbar-nav .nav-item {
+      flex-shrink: 1;
+    }
+
+    /* Logo responsive */
+    .custom-navbar .navbar-brand img {
+      height: 60px;
+      /* max-height: 90px; */
+      width: auto;
+    }
+
+    @media (max-width: 768px) {
+      .custom-navbar .navbar-brand img {
+        height: 40px;
+      }
+    }
+
+    /* Additional zoom-specific styles */
+    @media screen and (min-resolution: 96dpi) and (max-resolution: 120dpi) {
+      .custom-navbar .nav-link {
+        font-size: 14px;
+      }
+    }
+
+    @media screen and (min-resolution: 120dpi) and (max-resolution: 144dpi) {
+      .custom-navbar .nav-link {
+        font-size: 14px;
+        padding: 0.4rem 0.6rem !important;
+      }
+    }
+
+    @media screen and (min-resolution: 144dpi) and (max-resolution: 192dpi) {
+      .custom-navbar .nav-link {
+        font-size: 10px;
+        padding: 0.3rem 0.5rem !important;
+      }
+    }
+
+    @media screen and (min-resolution: 192dpi) {
+      .custom-navbar .nav-link {
+        font-size: 9px;
+        padding: 0.25rem 0.4rem !important;
+      }
+    }
+
+    /* Overflow handling for long menu items */
+    .custom-navbar .dropdown-item {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    /* Better mobile handling */
+    @media (max-width: 576px) {
+      .custom-navbar .navbar-brand img {
+        height: 35px;
+      }
+
+      .custom-navbar .nav-link {
+        font-size: 14px;
+        padding: 0.5rem 0.75rem !important;
+      }
+
+      .custom-navbar .dropdown-menu {
+        font-size: 12px;
+      }
+    }
+
+    /* SCROLL DIHILANGKAN - Navbar tidak akan scroll */
+    .custom-navbar {
+      overflow: visible;
+    }
+
+    .custom-navbar .navbar-nav {
+      overflow: visible;
+    }
+
+    /* Text selection prevention for better UX */
+    .custom-navbar .nav-link,
+    .custom-navbar .dropdown-item {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Loading state for better performance */
+    .custom-navbar .nav-link:active,
+    .custom-navbar .dropdown-item:active {
+      opacity: 0.7;
+      transition: opacity 0.1s ease;
+    }
+
+    /* Fix for submenu positioning issues */
+    .dropdown-submenu > .dropdown-menu {
+      position: absolute !important;
+    }
+
+    /* Ensure submenu is visible when shown */
+    .dropdown-submenu.show > .dropdown-menu {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* Better submenu arrow positioning */
+    .dropdown-submenu > a:after {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Mobile submenu improvements */
+    @media (max-width: 767px) {
+      .dropdown-submenu > .dropdown-menu {
+        position: static !important;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        margin-left: 0;
+        background-color: #f8f9fa;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding-left: 20px;
+        display: none;
+      }
+
+      .dropdown-submenu.show > .dropdown-menu {
+        display: block !important;
+      }
+
+      .dropdown-submenu > a:after {
+        display: none;
+      }
+    }
+
+    /* Ensure proper z-index stacking */
+    .custom-navbar .dropdown-menu {
+      z-index: 1050;
+    }
+
+    .custom-navbar .dropdown-submenu .dropdown-menu {
+      z-index: 1051;
+    }
+
+    /* Smooth transitions */
+    .dropdown-submenu .dropdown-menu {
+      transition: all 0.2s ease-in-out;
+    }
+
+    /* Fix for Bootstrap 4 dropdown positioning */
+    .dropdown-submenu {
+      position: relative;
+    }
+
+    .dropdown-submenu > .dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -6px;
+      margin-left: -1px;
+    }
+
+    /* RTL support if needed */
+    [dir="rtl"] .dropdown-submenu > .dropdown-menu {
+      left: auto;
+      right: 100%;
+      margin-left: 1px;
+      margin-right: -1px;
+    }
+  </style>
+
+  <nav
+    class="navbar navbar-expand-lg navbar-light bg-light fixed-top custom-navbar"
+  >
+    <!-- Brand/Logo -->
+    <a class="navbar-brand" href="https://simkeswa.kemkes.go.id/">
+      <img
+        src="https://simkeswa.kemkes.go.id/assets/images/logo2.png"
+        alt="Logo"
+      />
+    </a>
+
+    <!-- Mobile Toggle Button -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarTogglerDemo02"
+      aria-controls="navbarTogglerDemo02"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <!-- Main Navigation -->
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <!-- Dashboard -->
+        <li class="nav-item">
+          <a href="https://simkeswa.kemkes.go.id/?ref=napza" class="nav-link">
+            <i class="fa fa-home"></i> <span>Dashboard</span>
+          </a>
+        </li>
+
+        <!-- Skrining Menu -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-user-plus"></i> <span>Skrining</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/form_skrining/list_data"
+            >
+              <i class="fa fa-list"></i> List Skrining Dewasa (EPDS &amp; PHQ4)
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/form_skrining/dewasa"
+            >
+              <i class="fa fa-plus"></i> Form Skrining Dewasa (EPDS &amp; PHQ4)
+            </a>
+          </div>
+        </li>
+
+        <!-- Peta Sebaran Menu -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-map"></i> <span>Peta Sebaran</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/peta/pasung"
+            >
+              <i class="fa fa-map-marker"></i> Peta Sebaran Pasung
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/peta/odgj"
+            >
+              <i class="fa fa-map-marker"></i> Peta Sebaran ODGJ
+            </a>
+          </div>
+        </li>
+
+        <!-- Form Menu -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-file" aria-hidden="true"></i> <span>Form</span>
+          </a>
+          <div class="dropdown-menu">
+            <!-- Form A Submenu -->
+            <div class="dropdown-submenu">
+              <a
+                href="#"
+                class="dropdown-item dropdown-toggle"
+                data-toggle="dropdown"
+              >
+                <i class="fa fa-file"></i> Form A
+              </a>
+              <div class="dropdown-menu" style="display: none">
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form_a/add"
+                >
+                  <i class="fa fa-plus"></i> Input Data Pasien
+                </a>
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form_a/list_data"
+                >
+                  <i class="fa fa-list"></i> Lihat Data Pasien
+                </a>
+              </div>
+            </div>
+
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/form/obat"
+            >
+              <i class="fa fa-medkit"></i> Form Ketersediaan Obat
+            </a>
+
+            <!-- Form Layanan Disabilitas -->
+            <div class="dropdown-submenu">
+              <a
+                href="#"
+                class="dropdown-item dropdown-toggle"
+                data-toggle="dropdown"
+              >
+                <i class="fa fa-wheelchair"></i> Form Layanan Disabilitas
+              </a>
+              <div class="dropdown-menu" style="display: none">
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form/sasaran_disabilitas"
+                >
+                  <i class="fa fa-users"></i> Sasaran Penyandang Disabilitas
+                </a>
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form/sarana_prasarana"
+                >
+                  <i class="fa fa-building"></i> Ketersediaan Sarana Prasarana
+                  &amp; SDM
+                </a>
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form/cakupan_disabilitas"
+                >
+                  <i class="fa fa-bars"></i> Cakupan Pasien Rehabilitasi Medik
+                  Dasar
+                </a>
+              </div>
+            </div>
+
+            <div class="dropdown-submenu">
+              <a
+                href="#"
+                class="dropdown-item dropdown-toggle"
+                data-toggle="dropdown"
+              >
+                <i class="fa fa-bars"></i> Formulir SDM dan Fasilitas KTPA
+              </a>
+              <div class="dropdown-menu" style="display: none">
+                <!--a class="dropdown-item" href="https://simkeswa.kemkes.go.id/form/rape_kit">
+                                    <i class="fa fa-bars"></i> Ketersediaan Rape Kit
+                                </a>
+                                <a class="dropdown-item" href="https://simkeswa.kemkes.go.id/form/obat_kontrasepsi">
+                                    <i class="fa fa-bars"></i> Ketersediaan Obat Kontrasepsi Darurat
+                                </a-->
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form/fasilitas_ktpa"
+                >
+                  <i class="fa fa-bars"></i> Formulir Fasilitas KTPA
+                </a>
+              </div>
+            </div>
+
+            <div class="dropdown-submenu">
+              <a
+                href="#"
+                class="dropdown-item dropdown-toggle"
+                data-toggle="dropdown"
+              >
+                <i class="fa fa-user-md"></i> Form Layanan Pasien KTPA
+              </a>
+              <div class="dropdown-menu" style="display: none">
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form/nakes_ktpa"
+                >
+                  <i class="fa fa-user-md"></i> Nakes Terlatih Pelayanan KTPA
+                </a>
+                <!--a class="dropdown-item" href="https://simkeswa.kemkes.go.id/form/skrining_korban">
+                                    <i class="fa fa-search"></i> Skrining pada Dugaan Korban Kekerasan
+                                </a-->
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form/cakupan_ktpa"
+                >
+                  <i class="fa fa-bars"></i> Cakupan Layanan KTPA
+                </a>
+              </div>
+            </div>
+
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/form/nakes_keswa"
+            >
+              <i class="fa fa-bars"></i> Nakes Terlatih Keswa
+            </a>
+          </div>
+        </li>
+
+        <!-- Laporan Jiwa -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-book"></i> <span>Lap. Jiwa</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/p3lp"
+            >
+              <i class="fa fa-book"></i> Laporan P3LP
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/phq4"
+            >
+              <i class="fa fa-book"></i> Laporan Skrining PHQ-4
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/epds"
+            >
+              <i class="fa fa-book"></i> Laporan Skrining EPDS
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/odgj"
+            >
+              <i class="fa fa-book"></i> Laporan ODGJ
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/odgj_spm"
+            >
+              <i class="fa fa-book"></i> Laporan ODGJ SPM
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/penyakit_lainnya"
+            >
+              <i class="fa fa-book"></i> Laporan Penyakit Lainnya
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/pasung"
+            >
+              <i class="fa fa-book"></i> Laporan Pasung
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/percobaan_bunuhdiri"
+            >
+              <i class="fa fa-book"></i> Laporan Percobaan Bunuh Diri
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/bunuhdiri"
+            >
+              <i class="fa fa-book"></i> Laporan Bunuh Diri
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/obat"
+            >
+              <i class="fa fa-book"></i> Laporan Ketersediaan Obat
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/obat"
+            >
+              <i class="fa fa-book"></i> Laporan Penggunaan Obat
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/skrining"
+            >
+              <i class="fa fa-book"></i> Laporan Skrining 2022-2024
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/odgj_berat"
+            >
+              <i class="fa fa-book"></i> Laporan ODGJ Berat 2022-2024
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/report/tindak_lanjut"
+            >
+              <i class="fa fa-book"></i> Laporan Tindak Lanjut
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/nakes_terlatih_keswa"
+            >
+              <i class="fa fa-book"></i> Laporan Nakes Terlatih Keswa
+            </a>
+          </div>
+        </li>
+
+        <!-- Laporan Rentan -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-book"></i> <span>Lap. Rentan</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/sarana_prasarana"
+            >
+              <i class="fa fa-book"></i> Laporan Puskesmas dengan Layanan Ramah
+              Penyandang Disabilitas
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/cakupan_disabilitas"
+            >
+              <i class="fa fa-book"></i> Laporan Cakupan Pelayanan Ramah
+              Penyandang Disabilitas
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/rape_kit"
+            >
+              <i class="fa fa-book"></i> Laporan Ketersediaan Rape Kit
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/obat_kontrasepsi"
+            >
+              <i class="fa fa-book"></i> Laporan Ketersediaan Obat Kontrasepsi
+              Darurat
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/nakes_terlatih_ktpa"
+            >
+              <i class="fa fa-book"></i> Laporan Nakes Terlatih Pelayanan KtPA
+            </a>
+            <!--a class="dropdown-item" href="https://simkeswa.kemkes.go.id/laporan/skrining_korban_kekerasan">
+                            <i class="fa fa-book"></i> Laporan Skrining pada Dugaan Korban Kekerasan
+                        </a-->
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/laporan/cakupan_ktpa"
+            >
+              <i class="fa fa-book"></i> Laporan Cakupan Layanan KtPA
+            </a>
+          </div>
+        </li>
+
+        <!-- Export Menus (Hidden for unicef) -->
+        <!-- Export Jiwa -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <!--i class="fa fa-file-excel-o"></i> <span>Exp. Jiwa</span-->
+            <i class="fas fa-file-excel"></i><span>Exp. Jiwa</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/p3lp"
+            >
+              <i class="fa fa-download"></i> Export P3LP
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/phq"
+            >
+              <i class="fa fa-download"></i> Export PHQ-4
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/epds"
+            >
+              <i class="fa fa-download"></i> Export EPDS
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/assist"
+            >
+              <i class="fa fa-download"></i> Export Assist
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/odgj"
+            >
+              <i class="fa fa-download"></i> Export ODGJ
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/penyakit_lainnya"
+            >
+              <i class="fa fa-download"></i> Export Penyakit Lainnya
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/srq"
+            >
+              <i class="fa fa-download"></i> Export SRQ
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/sdq"
+            >
+              <i class="fa fa-download"></i> Export SDQ
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/percobaan_bunuhdiri"
+            >
+              <i class="fa fa-download"></i> Export Percobaan Bunuh Diri
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/bunuhdiri"
+            >
+              <i class="fa fa-download"></i> Export Bunuh Diri
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/pasung"
+            >
+              <i class="fa fa-download"></i> Export Pasung
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/tindak_lanjut_skrining"
+            >
+              <i class="fa fa-download"></i> Export Tindak Lanjut Skrining
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/nakes_terlatih_keswa"
+            >
+              <i class="fa fa-download"></i> Export Nakes Terlatih Keswa
+            </a>
+          </div>
+        </li>
+
+        <!-- Export Rentan -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <!--i class="fa fa-file-excel-o"></i> <span>Exp. Rentan</span-->
+            <i class="fas fa-file-excel"></i> <span>Exp. Rentan</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/nakes_terlatih_ktpa"
+            >
+              <i class="fa fa-download"></i> Export Nakes Terlatih Pelayanan
+              KtPA
+            </a>
+            <!--a class="dropdown-item" href="https://simkeswa.kemkes.go.id/export_individu/skrining_korban_kekerasan">
+                            <i class="fa fa-download"></i> Export Skrining pada Dugaan Korban Kekerasan
+                        </a-->
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/export_individu/cakupan_ktpa"
+            >
+              <i class="fa fa-download"></i> Export Cakupan Layanan KtPA
+            </a>
+          </div>
+        </li>
+
+        <!-- Penyuluhan -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-users"></i> <span>Penyuluhan</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/penyuluhan/kelompok"
+            >
+              <i class="fa fa-users"></i> Penyuluhan Kelompok
+            </a>
+          </div>
+        </li>
+
+        <!-- P3LP Menu -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-users"></i> <span>P3LP</span>
+          </a>
+          <div class="dropdown-menu">
+            <div class="dropdown-submenu">
+              <a
+                href="#"
+                class="dropdown-item dropdown-toggle"
+                data-toggle="dropdown"
+              >
+                <i class="fa fa-file"></i> Form
+              </a>
+              <div class="dropdown-menu" style="display: none">
+                <a
+                  class="dropdown-item"
+                  href="https://simkeswa.kemkes.go.id/form_p3lp/p3lp"
+                >
+                  <i class="fa fa-book"></i> Form P3LP
+                </a>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Absensi -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-file"></i> <span>Absensi</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/absensi/index"
+            >
+              <i class="fa fa-list"></i> List Absensi
+            </a>
+
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/absensi/nihil"
+            >
+              <i class="fa fa-times-circle"></i> Absensi Nihil
+            </a>
+          </div>
+        </li>
+
+        <!-- Master Data -->
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-file"></i> <span>Master</span>
+          </a>
+          <div class="dropdown-menu">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/master/wilayah"
+            >
+              <i class="fa fa-map"></i> Master Wilayah
+            </a>
+          </div>
+        </li>
+      </ul>
+
+      <!-- User Profile Menu -->
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a
+            href="#"
+            class="nav-link dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="fa fa-user"></i> <span>PUSKESMAS SERPONG II (pkm)</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/dashboard/bantuan"
+            >
+              <i class="fa fa-question-circle"></i> Bantuan
+            </a>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/dashboard/profil_tampil"
+            >
+              <i class="feather icon-user"></i> Profile 192.168.142.95
+            </a>
+            <div class="dropdown-divider"></div>
+            <a
+              class="dropdown-item"
+              href="https://simkeswa.kemkes.go.id/auth/logout"
+            >
+              <i class="feather icon-log-out"></i> Logout
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- JavaScript untuk dropdown submenu -->
+  <script>
+    $(document).ready(function () {
+      // Handle dropdown submenu click
+      $(".dropdown-submenu .dropdown-toggle").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var $submenu = $(this).parent(".dropdown-submenu");
+        var $submenuDropdown = $(this).next(".dropdown-menu");
+
+        // Close all other submenus
+        $(".dropdown-submenu").not($submenu).removeClass("show");
+        $(".dropdown-submenu .dropdown-menu").not($submenuDropdown).hide();
+
+        // Toggle current submenu
+        if ($submenu.hasClass("show")) {
+          $submenu.removeClass("show");
+          $submenuDropdown.hide();
+        } else {
+          $submenu.addClass("show");
+          $submenuDropdown.show();
+        }
+      });
+
+      // Handle dropdown submenu hover (for desktop)
+      if ($(window).width() > 768) {
+        $(".dropdown-submenu").hover(
+          function () {
+            $(this).addClass("show");
+            $(this).find(".dropdown-menu").first().show();
+          },
+          function () {
+            $(this).removeClass("show");
+            $(this).find(".dropdown-menu").first().hide();
+          },
+        );
+      }
+
+      // Close all submenus when main dropdown is closed
+      $(".dropdown").on("hidden.bs.dropdown", function () {
+        $(".dropdown-submenu").removeClass("show");
+        $(".dropdown-submenu .dropdown-menu").hide();
+      });
+
+      // Prevent dropdown from closing when clicking inside submenu
+      $(".dropdown-menu").on("click", function (e) {
+        if (
+          $(e.target).hasClass("dropdown-toggle") ||
+          $(e.target).closest(".dropdown-submenu").length
+        ) {
+          e.stopPropagation();
+        }
+      });
+
+      // Close dropdown when clicking on regular dropdown item
+      $(".dropdown-item:not(.dropdown-toggle)").on("click", function () {
+        $(".dropdown-menu").removeClass("show");
+        $(".dropdown").removeClass("show");
+        $(".dropdown-submenu").removeClass("show");
+        $(".dropdown-submenu .dropdown-menu").hide();
+      });
+
+      // Handle navbar collapse on mobile
+      $(".navbar-nav .nav-link").on("click", function () {
+        if ($(window).width() < 768) {
+          $(".navbar-collapse").collapse("hide");
+        }
+      });
+
+      // Handle window resize
+      $(window).resize(function () {
+        if ($(window).width() >= 768) {
+          $(".navbar-collapse").removeClass("show");
+        }
+
+        // Re-initialize hover events based on screen size
+        $(".dropdown-submenu").off("mouseenter mouseleave");
+        if ($(window).width() > 768) {
+          $(".dropdown-submenu").hover(
+            function () {
+              $(this).addClass("show");
+              $(this).find(".dropdown-menu").first().show();
+            },
+            function () {
+              $(this).removeClass("show");
+              $(this).find(".dropdown-menu").first().hide();
+            },
+          );
+        }
+      });
+
+      // Close submenu when clicking outside
+      $(document).on("click", function (e) {
+        if (
+          !$(e.target).closest(".dropdown-submenu").length &&
+          !$(e.target).closest(".dropdown").length
+        ) {
+          $(".dropdown-submenu").removeClass("show");
+          $(".dropdown-submenu .dropdown-menu").hide();
+        }
+      });
+    });
+  </script>
+</section>
+
+<div class="ptop-content mt-4">
+  <form
+    action="https://simkeswa.kemkes.go.id/form_skrining/dewasa"
+    method="post"
+    class="j-pro"
+    id="form-data"
+  >
+    <div class="row bg-grey">
+      <div class="col-lg-12 mt-4">
+        <div class="">
+          <div class="bg-white p-4">
+            <input
+              type="hidden"
+              name="csrftoken_tn"
+              value="d6c9615858ad057b8b6a8ff5a30604d8"
+            />
+            <h4 class="text-dark-blue mb-3">Data Individu</h4>
+            <div class="row mb-2">
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Tanggal Skrining<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <div class="j-input">
+                    <input
+                      type="text"
+                      value=""
+                      id="tanggal_skrining"
+                      class="dt-picker hasDatepicker"
+                      placeholder="Tanggal Skrining"
+                      name="tanggal_skrining"
+                    />
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >NIK<i class="required-key" style="color: red">*</i>
+                      :</label
+                    ><br />
+                  </div>
+                  <div class="j-input">
+                    <input
+                      type="text"
+                      value=""
+                      id="nik"
+                      placeholder="No Induk Kependudukan"
+                      name="nik"
+                      maxlength="16"
+                    />
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Nama lengkap
+                      <i class="required-key" style="color: red">*</i></label
+                    ><br />
+                  </div>
+                  <div class="j-input">
+                    <input
+                      type="text"
+                      value=""
+                      id="nama_lengkap"
+                      placeholder="Nama Lengkap"
+                      name="nama_lengkap"
+                    />
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Tanggal Lahir
+                      <i class="required-key" style="color: red">*</i></label
+                    ><br />
+                  </div>
+                  <div class="j-input">
+                    <input
+                      type="text"
+                      value=""
+                      id="tanggal_lahir"
+                      class="dt-picker-dewasa hasDatepicker"
+                      placeholder="Tanggal Lahir"
+                      name="tanggal_lahir"
+                    />
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Jenis Kelamin<i class="required-key" style="color: red"
+                        >*</i
+                      >
+                      :</label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="jenis_kelamin" id="jenis_kelamin">
+                      <option value="" selected="" disabled="">
+                        Jenis Kelamin
+                      </option>
+                      <option value="L" disabled="">Laki-laki</option>
+                      <option value="P">Perempuan</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >No Telp<i class="required-key" style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <div class="j-input">
+                    <input
+                      type="text"
+                      value=""
+                      id="no_telepon"
+                      placeholder="No. Telp"
+                      name="no_telepon"
+                    />
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Provinsi Domisili<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      >
+                      :</label
+                    ><br />
+                  </div>
+                  <div class="j-input j-select">
+                    <select
+                      id="propinsi_domisili"
+                      name="propinsi_domisili"
+                      onchange="return pilihKabupaten(this, event);"
+                      data-target="kabupaten_domisili"
+                    >
+                      <option value="36">Banten</option>
+                    </select>
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Kabupaten / Kota Domisili<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      >
+                      :</label
+                    ><br />
+                  </div>
+                  <div class="j-input j-select">
+                    <select
+                      name="kabupaten_domisili"
+                      onchange="return pilihKecamatan(this, event);"
+                      data-target="kecamatan_domisili"
+                    >
+                      <option value="3674">KOTA TANGERANG SELATAN</option>
+                    </select>
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Kecamatan Domisili<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      >
+                      :</label
+                    ><br />
+                  </div>
+                  <div class="j-input j-select">
+                    <select
+                      name="kecamatan_domisili"
+                      onchange="return pilihKelurahan(this, event);"
+                      data-target="kelurahan_domisili"
+                    >
+                      <option value="" selected="">
+                        Pilih Kecamatan Domisili
+                      </option>
+                      <option value="367401">SERPONG</option>
+                    </select>
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Kelurahan Domisili<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      >
+                      :</label
+                    ><br />
+                  </div>
+                  <div class="j-input j-select">
+                    <select name="kelurahan_domisili" id="kelurahan_domisili">
+                      <option value="">Pilih Kelurahan</option>
+                      <option value="3674011009">SERPONG</option>
+                    </select>
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Pendidikan<i class="required-key" style="color: red"
+                        >*</i
+                      >
+                      :</label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="pendidikan">
+                      <option value="" selected="" disabled="">
+                        Pilih Pendidikan
+                      </option>
+                      <option value="Belum Sekolah">Belum Sekolah</option>
+                      <option value="SD Atau Sederajat">
+                        SD Atau Sederajat
+                      </option>
+                      <option value="SMP Atau Sederajat">
+                        SMP Atau Sederajat
+                      </option>
+                      <option value="SMA Atau Sederajat">
+                        SMA Atau Sederajat
+                      </option>
+                      <option value="D3/S1/S2/S3/Pasca Sarjana">
+                        D3/S1/S2/S3/Pasca Sarjana
+                      </option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Pekerjaan<i class="required-key" style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="pekerjaan">
+                      <option value="" selected="" disabled="">
+                        Pilih Pekerjaan
+                      </option>
+                      <option value="Tidak Bekerja">Tidak Bekerja</option>
+                      <option value="Bekerja">Bekerja</option>
+                      <option value="Pelajar">Pelajar</option>
+                      <option value="Mahasiswa">Mahasiswa</option>
+                      <option value="Pensiunan">Pensiunan</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Status Menikah<i class="required-key" style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="status_nikah" id="status_nikah">
+                      <option value="" selected="" disabled="">
+                        Pilih Status Menikah
+                      </option>
+                      <option value="Belum Menikah">Belum Menikah</option>
+                      <option value="Menikah">Menikah</option>
+                      <option value="Cerai Hidup">Cerai Hidup</option>
+                      <option value="Cerai Mati">Cerai Mati</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6" id="div_kehamilan" style="">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Status Kehamilan<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="status_kehamilan" id="status_kehamilan">
+                      <option value="" selected="" disabled="">
+                        Pilih Status Kehamilan
+                      </option>
+                      <option value="Ya">Ya</option>
+                      <option value="Tidak">Tidak</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6" id="div_waktu_kunjungan_kehamilan" style="">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Waktu Kunjungan Kehamilan<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select
+                      name="waktu_kunjungan_kehamilan"
+                      id="waktu_kunjungan_kehamilan"
+                    >
+                      <option value="" selected="" disabled="">
+                        Waktu Kunjungan Kehamilan
+                      </option>
+                      <option value="k1">K1 (0- 12 Minggu)</option>
+                      <option value="k2">K2 (0- 12 Minggu)</option>
+                      <option value="k3">K3 (&gt;12 - 24 Minggu)</option>
+                      <option value="k4">K4 (&gt;24 - Kelahiran)</option>
+                      <option value="k5">K5 (&gt;24 - Kelahiran)</option>
+                      <option value="k6">K6 (&gt;24 - Kelahiran)</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div class="col-md-6" id="div_nifas" style="display: none">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Status Nifas<i class="required-key" style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="status_nifas" id="status_nifas">
+                      <option value="" selected="" disabled="">
+                        Pilih Status Nifas
+                      </option>
+                      <option value="Ya">Ya</option>
+                      <option value="Tidak">Tidak</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+
+              <div
+                class="col-md-6"
+                id="div_waktu_kunjungan_nifas"
+                style="display: none"
+              >
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Waktu Kunjungan Nifas<i
+                        class="required-key"
+                        style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="waktu_kunjungan_nifas">
+                      <option value="" selected="" disabled="">
+                        Waktu Kunjungan Nifas
+                      </option>
+                      <option value="kf1">KF1 (6 jam - 2 hari)</option>
+                      <option value="kf2">KF2 (3 hari - 7 hari)</option>
+                      <option value="kf3">KF3 (8 hari - 28 hari)</option>
+                      <option value="kf4">KF4 (29 hari - 42 hari)</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+              <div class="col-md-6" id="div_jenis_skrining">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Jenis Skrining<i class="required-key" style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select select-readonly">
+                    <select
+                      id="jenis_skrining"
+                      name="jenis_skrining_display"
+                      style="background-color: grey !important"
+                      disabled=""
+                    >
+                      <option value="" selected="" disabled="">
+                        Pilih Jenis Skrining
+                      </option>
+                      <option value="epds">
+                        Instrument Edinburgh Postnatal Depression Scale (EPDS)
+                      </option>
+                      <option value="phq4">
+                        Patient Health Questionnaire&nbsp;-&nbsp;4 (PHQ4)
+                      </option>
+                    </select>
+                    <input
+                      type="hidden"
+                      name="jenis_skrining"
+                      id="jenis_skrining_hidden"
+                      value="epds"
+                    />
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+              <div class="col-md-6" id="div_waktu_kunjungan_nifas">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Jenis Institusi<i class="required-key" style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <label class="j-input j-select">
+                    <select name="penyelenggara">
+                      <option value="" selected="" disabled="">
+                        Silahkan pilih Jenis Institusi
+                      </option>
+                      <option value="Sekolah">Sekolah</option>
+                      <option value="Pesantren">Pesantren</option>
+                      <option value="Kampus/Perguruan Tinggi">
+                        Kampus/Perguruan Tinggi
+                      </option>
+                      <option value="Puskesmas">Puskesmas</option>
+                      <option value="Tempat Kerja">Tempat Kerja</option>
+                      <option value="Komunitas">Komunitas</option>
+                    </select>
+                  </label>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="j-unit">
+                  <div class="">
+                    <label
+                      >Nama Institusi<i class="required-key" style="color: red"
+                        >*</i
+                      ></label
+                    ><br />
+                  </div>
+                  <div class="j-input">
+                    <input
+                      type="text"
+                      value=""
+                      id="nama_institusi"
+                      placeholder="Nama Institusi"
+                      name="nama_institusi"
+                    />
+                  </div>
+                  <small style="color: red"></small>
+                </div>
+              </div>
+            </div>
+            <h3 class="text-danger text-success" id="alert-skrining">
+              Karena Anda saat ini hamil atau pasca melahirkan, kami ingin
+              mengetahui bagaimana perasaan anda sekarang. Silakan memilih
+              jawaban yang paling mirip dengan perasaan anda selama 7 hari
+              terakhir, tidak hanya perasaan anda hari ini.
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div id="pertanyaan-skrining-epds" class="row" style="">
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >1. Saya dapat tertawa dan melihat sisi lucu hal tertentu.</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="1">
+          <div class="form-check pilihan-item border" id="wrapper_soal_1_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[1]"
+              id="soal_1_pil_0"
+              value="Seperti biasanya"
+              required=""
+            />
+            <label class="form-check-label" for="soal_1_pil_0">
+              <span>Seperti biasanya</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_1_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[1]"
+              id="soal_1_pil_1"
+              value="Sekarang tidak terlalu sering"
+              required=""
+            />
+            <label class="form-check-label" for="soal_1_pil_1">
+              <span>Sekarang tidak terlalu sering</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_1_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[1]"
+              id="soal_1_pil_2"
+              value="Sekarang agak jarang"
+              required=""
+            />
+            <label class="form-check-label" for="soal_1_pil_2">
+              <span>Sekarang agak jarang</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_1_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[1]"
+              id="soal_1_pil_3"
+              value="Tidak sama sekali"
+              required=""
+            />
+            <label class="form-check-label" for="soal_1_pil_3">
+              <span>Tidak sama sekali</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >2. Saya menanti-nanti untuk melakukan sesuatu dengan penuh
+            harapan.</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="2">
+          <div class="form-check pilihan-item border" id="wrapper_soal_2_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[2]"
+              id="soal_2_pil_0"
+              value="Hampir Seperti biasanya"
+              required=""
+            />
+            <label class="form-check-label" for="soal_2_pil_0">
+              <span>Hampir Seperti biasanya</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_2_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[2]"
+              id="soal_2_pil_1"
+              value="Agak berkurang dari biasanya"
+              required=""
+            />
+            <label class="form-check-label" for="soal_2_pil_1">
+              <span>Agak berkurang dari biasanya</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_2_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[2]"
+              id="soal_2_pil_2"
+              value="Jelas berkurang dari biasanya"
+              required=""
+            />
+            <label class="form-check-label" for="soal_2_pil_2">
+              <span>Jelas berkurang dari biasanya</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_2_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[2]"
+              id="soal_2_pil_3"
+              value="Hampir tidak pernah sama sekali"
+              required=""
+            />
+            <label class="form-check-label" for="soal_2_pil_3">
+              <span>Hampir tidak pernah sama sekali</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >3. Saya menyalahkan diri sendiri jika ada sesuatu yang tidak
+            berjalan dengan baik.</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="3">
+          <div class="form-check pilihan-item border" id="wrapper_soal_3_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[3]"
+              id="soal_3_pil_0"
+              value="Ya, hampir selalu"
+              required=""
+            />
+            <label class="form-check-label" for="soal_3_pil_0">
+              <span>Ya, hampir selalu</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_3_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[3]"
+              id="soal_3_pil_1"
+              value="Ya, kadang-kadang"
+              required=""
+            />
+            <label class="form-check-label" for="soal_3_pil_1">
+              <span>Ya, kadang-kadang</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_3_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[3]"
+              id="soal_3_pil_2"
+              value="Tidak terlalu sering"
+              required=""
+            />
+            <label class="form-check-label" for="soal_3_pil_2">
+              <span>Tidak terlalu sering</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_3_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[3]"
+              id="soal_3_pil_3"
+              value="Tidak, tidak pernah"
+              required=""
+            />
+            <label class="form-check-label" for="soal_3_pil_3">
+              <span>Tidak, tidak pernah</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p><strong>4. Saya merasa cemas atau khawatir tanpa alasan.</strong></p>
+        <div class="pilihan-group" data-soal="4">
+          <div class="form-check pilihan-item border" id="wrapper_soal_4_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[4]"
+              id="soal_4_pil_0"
+              value="Tidak, tidak sama sekali"
+              required=""
+            />
+            <label class="form-check-label" for="soal_4_pil_0">
+              <span>Tidak, tidak sama sekali</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_4_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[4]"
+              id="soal_4_pil_1"
+              value="Hampir tidak pernah"
+              required=""
+            />
+            <label class="form-check-label" for="soal_4_pil_1">
+              <span>Hampir tidak pernah</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_4_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[4]"
+              id="soal_4_pil_2"
+              value="Ya, kadang-kadang"
+              required=""
+            />
+            <label class="form-check-label" for="soal_4_pil_2">
+              <span>Ya, kadang-kadang</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_4_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[4]"
+              id="soal_4_pil_3"
+              value="Ya, amat sering"
+              required=""
+            />
+            <label class="form-check-label" for="soal_4_pil_3">
+              <span>Ya, amat sering</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p><strong>5. Saya merasa takut atau panik tanpa alasan.</strong></p>
+        <div class="pilihan-group" data-soal="5">
+          <div class="form-check pilihan-item border" id="wrapper_soal_5_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[5]"
+              id="soal_5_pil_0"
+              value="Ya, sering sekali"
+              required=""
+            />
+            <label class="form-check-label" for="soal_5_pil_0">
+              <span>Ya, sering sekali</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_5_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[5]"
+              id="soal_5_pil_1"
+              value="Ya,kadang-kadang"
+              required=""
+            />
+            <label class="form-check-label" for="soal_5_pil_1">
+              <span>Ya,kadang-kadang</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_5_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[5]"
+              id="soal_5_pil_2"
+              value="Tidak, tidak terlalu"
+              required=""
+            />
+            <label class="form-check-label" for="soal_5_pil_2">
+              <span>Tidak, tidak terlalu</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_5_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[5]"
+              id="soal_5_pil_3"
+              value="Tidak, tidak pernah sama sekali"
+              required=""
+            />
+            <label class="form-check-label" for="soal_5_pil_3">
+              <span>Tidak, tidak pernah sama sekali</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p><strong>6. Banyak hal menjadi beban untuk saya.</strong></p>
+        <div class="pilihan-group" data-soal="6">
+          <div class="form-check pilihan-item border" id="wrapper_soal_6_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[6]"
+              id="soal_6_pil_0"
+              value="Ya, serinng kali saya sama sekali tidak dapat mengatasinya"
+              required=""
+            />
+            <label class="form-check-label" for="soal_6_pil_0">
+              <span
+                >Ya, serinng kali saya sama sekali tidak dapat
+                mengatasinya</span
+              >
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_6_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[6]"
+              id="soal_6_pil_1"
+              value="Ya,kadang saya tidak dapat mengatasi seperti biasanya"
+              required=""
+            />
+            <label class="form-check-label" for="soal_6_pil_1">
+              <span>Ya,kadang saya tidak dapat mengatasi seperti biasanya</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_6_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[6]"
+              id="soal_6_pil_2"
+              value="Tidak, biasanya saya dapat menangananinya dengan baik"
+              required=""
+            />
+            <label class="form-check-label" for="soal_6_pil_2">
+              <span>Tidak, biasanya saya dapat menangananinya dengan baik</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_6_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[6]"
+              id="soal_6_pil_3"
+              value="Tidak, saya dapat mengatasinya dengan baik seperti biasanya"
+              required=""
+            />
+            <label class="form-check-label" for="soal_6_pil_3">
+              <span
+                >Tidak, saya dapat mengatasinya dengan baik seperti
+                biasanya</span
+              >
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p><strong>7. Saya merasa begitu sedih sampai sulit tidur.</strong></p>
+        <div class="pilihan-group" data-soal="7">
+          <div class="form-check pilihan-item border" id="wrapper_soal_7_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[7]"
+              id="soal_7_pil_0"
+              value="Ya, hampir selalu"
+              required=""
+            />
+            <label class="form-check-label" for="soal_7_pil_0">
+              <span>Ya, hampir selalu</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_7_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[7]"
+              id="soal_7_pil_1"
+              value="Ya,kadang-kadang"
+              required=""
+            />
+            <label class="form-check-label" for="soal_7_pil_1">
+              <span>Ya,kadang-kadang</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_7_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[7]"
+              id="soal_7_pil_2"
+              value="Tidak, tidak sering"
+              required=""
+            />
+            <label class="form-check-label" for="soal_7_pil_2">
+              <span>Tidak, tidak sering</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_7_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[7]"
+              id="soal_7_pil_3"
+              value="Tidak, tidak pernah"
+              required=""
+            />
+            <label class="form-check-label" for="soal_7_pil_3">
+              <span>Tidak, tidak pernah</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p><strong>8. Saya merasa sedih atau susah.</strong></p>
+        <div class="pilihan-group" data-soal="8">
+          <div class="form-check pilihan-item border" id="wrapper_soal_8_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[8]"
+              id="soal_8_pil_0"
+              value="Ya, hampir selalu"
+              required=""
+            />
+            <label class="form-check-label" for="soal_8_pil_0">
+              <span>Ya, hampir selalu</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_8_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[8]"
+              id="soal_8_pil_1"
+              value="Ya, sering"
+              required=""
+            />
+            <label class="form-check-label" for="soal_8_pil_1">
+              <span>Ya, sering</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_8_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[8]"
+              id="soal_8_pil_2"
+              value="Jarang"
+              required=""
+            />
+            <label class="form-check-label" for="soal_8_pil_2">
+              <span>Jarang</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_8_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[8]"
+              id="soal_8_pil_3"
+              value="Tidak pernah"
+              required=""
+            />
+            <label class="form-check-label" for="soal_8_pil_3">
+              <span>Tidak pernah</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong>9. Saya merasa sangat sedih sehingga saya menangis.</strong>
+        </p>
+        <div class="pilihan-group" data-soal="9">
+          <div class="form-check pilihan-item border" id="wrapper_soal_9_pil_0">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[9]"
+              id="soal_9_pil_0"
+              value="Ya ,hampir selalu"
+              required=""
+            />
+            <label class="form-check-label" for="soal_9_pil_0">
+              <span>Ya ,hampir selalu</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_9_pil_1">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[9]"
+              id="soal_9_pil_1"
+              value="Ya, sering"
+              required=""
+            />
+            <label class="form-check-label" for="soal_9_pil_1">
+              <span>Ya, sering</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_9_pil_2">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[9]"
+              id="soal_9_pil_2"
+              value="Hanya sekali-kali"
+              required=""
+            />
+            <label class="form-check-label" for="soal_9_pil_2">
+              <span>Hanya sekali-kali</span>
+            </label>
+          </div>
+          <div class="form-check pilihan-item border" id="wrapper_soal_9_pil_3">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[9]"
+              id="soal_9_pil_3"
+              value="Tidak pernah"
+              required=""
+            />
+            <label class="form-check-label" for="soal_9_pil_3">
+              <span>Tidak pernah</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >10. Pikiran untuk mencelakai diri sendiri sering muncul.</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="10">
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_10_pil_0"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[10]"
+              id="soal_10_pil_0"
+              value="Ya, agak sering"
+              required=""
+            />
+            <label class="form-check-label" for="soal_10_pil_0">
+              <span>Ya, agak sering</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_10_pil_1"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[10]"
+              id="soal_10_pil_1"
+              value="Kadang-kadang"
+              required=""
+            />
+            <label class="form-check-label" for="soal_10_pil_1">
+              <span>Kadang-kadang</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_10_pil_2"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[10]"
+              id="soal_10_pil_2"
+              value="Hampir tidak pernah"
+              required=""
+            />
+            <label class="form-check-label" for="soal_10_pil_2">
+              <span>Hampir tidak pernah</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_10_pil_3"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[10]"
+              id="soal_10_pil_3"
+              value="Tidak pernah"
+              required=""
+            />
+            <label class="form-check-label" for="soal_10_pil_3">
+              <span>Tidak pernah</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pertanyaan-skrining-phq4" class="row" style="display: none">
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >1. Dalam 2 minggu terakhir, seberapa sering Anda kurang/tidak
+            bersemangat dalam melakukan kegiatan sehari-hari?</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="11">
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_11_pil_0"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[11]"
+              id="soal_11_pil_0"
+              value="Tidak sama sekali"
+            />
+            <label class="form-check-label" for="soal_11_pil_0">
+              <span>Tidak sama sekali</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_11_pil_1"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[11]"
+              id="soal_11_pil_1"
+              value="Kurang dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_11_pil_1">
+              <span>Kurang dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_11_pil_2"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[11]"
+              id="soal_11_pil_2"
+              value="Lebih dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_11_pil_2">
+              <span>Lebih dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_11_pil_3"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[11]"
+              id="soal_11_pil_3"
+              value="Hampir setiap hari"
+            />
+            <label class="form-check-label" for="soal_11_pil_3">
+              <span>Hampir setiap hari</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >2. Dalam 2 minggu terakhir, seberapa sering Anda merasa murung,
+            tertekan, atau putus asa?</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="12">
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_12_pil_0"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[12]"
+              id="soal_12_pil_0"
+              value="Tidak sama sekali"
+            />
+            <label class="form-check-label" for="soal_12_pil_0">
+              <span>Tidak sama sekali</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_12_pil_1"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[12]"
+              id="soal_12_pil_1"
+              value="Kurang dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_12_pil_1">
+              <span>Kurang dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_12_pil_2"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[12]"
+              id="soal_12_pil_2"
+              value="Lebih dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_12_pil_2">
+              <span>Lebih dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_12_pil_3"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[12]"
+              id="soal_12_pil_3"
+              value="Hampir setiap hari"
+            />
+            <label class="form-check-label" for="soal_12_pil_3">
+              <span>Hampir setiap hari</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >3. Dalam 2 minggu terakhir, seberapa sering Anda merasa gugup,
+            cemas, atau gelisah?</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="13">
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_13_pil_0"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[13]"
+              id="soal_13_pil_0"
+              value="Tidak sama sekali"
+            />
+            <label class="form-check-label" for="soal_13_pil_0">
+              <span>Tidak sama sekali</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_13_pil_1"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[13]"
+              id="soal_13_pil_1"
+              value="Kurang dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_13_pil_1">
+              <span>Kurang dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_13_pil_2"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[13]"
+              id="soal_13_pil_2"
+              value="Lebih dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_13_pil_2">
+              <span>Lebih dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_13_pil_3"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[13]"
+              id="soal_13_pil_3"
+              value="Hampir setiap hari"
+            />
+            <label class="form-check-label" for="soal_13_pil_3">
+              <span>Hampir setiap hari</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="border p-3 rounded soal-container">
+        <p>
+          <strong
+            >4. Dalam 2 minggu terakhir, seberapa sering Anda tidak mampu
+            mengontrol rasa khawatir?</strong
+          >
+        </p>
+        <div class="pilihan-group" data-soal="14">
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_14_pil_0"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[14]"
+              id="soal_14_pil_0"
+              value="Tidak sama sekali"
+            />
+            <label class="form-check-label" for="soal_14_pil_0">
+              <span>Tidak sama sekali</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_14_pil_1"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[14]"
+              id="soal_14_pil_1"
+              value="Kurang dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_14_pil_1">
+              <span>Kurang dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_14_pil_2"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[14]"
+              id="soal_14_pil_2"
+              value="Lebih dari 1 (satu) Minggu"
+            />
+            <label class="form-check-label" for="soal_14_pil_2">
+              <span>Lebih dari 1 (satu) Minggu</span>
+            </label>
+          </div>
+          <div
+            class="form-check pilihan-item border"
+            id="wrapper_soal_14_pil_3"
+          >
+            <input
+              class="form-check-input"
+              type="radio"
+              name="jawaban[14]"
+              id="soal_14_pil_3"
+              value="Hampir setiap hari"
+            />
+            <label class="form-check-label" for="soal_14_pil_3">
+              <span>Hampir setiap hari</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12">
+  <div class="j-footer d-flex justify-content-start">
+    <button type="submit" class="btn btn-dark-blue">Simpan</button>
+  </div>
+</div>
