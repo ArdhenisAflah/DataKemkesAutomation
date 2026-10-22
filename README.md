@@ -16,7 +16,17 @@ Project ini adalah tools otomatisasi berbasis **Python + Selenium** untuk mengis
 
 Data diambil dari file Excel hasil ekspor **SIMPUS**, difilter berdasarkan kode ICD Z34 (kehamilan normal), lalu diproses dan diinputkan secara otomatis ke sistem — termasuk pengisian kuesioner EPDS 10 soal, data domisili, dan informasi demografis pasien.
 
-> **Disclaimer**: Tools ini dibuat untuk keperluan operasional internal Puskesmas. Penggunaan harus sesuai dengan kebijakan dan kewenangan institusi terkait.
+---
+
+## Dokumentasi Eksekusi
+
+Berikut bukti eksekusi langsung otomatisasi pada terminal saat berinteraksi dengan portal [SIM-Keswa Kemenkes RI](https://simkeswa.kemkes.go.id):
+
+| Inisialisasi & Pembacaan Data | Proses Pengisian Form & EPDS |
+| :---: | :---: |
+| ![Inisialisasi & Validasi Data SIMPUS](docs/demo_terminal_init.png) | ![Autofill Form & Submit SIM-Keswa](docs/demo_terminal_autofill.png) |
+
+*(Catatan: Nilai data sensitif pasien seperti NIK dan kontak telah disensor demi mematuhi privasi data medis).*
 
 ---
 
@@ -57,6 +67,8 @@ DataKemkesAutomation/
 ├── docs/                        ← Gambar & aset dokumentasi
 │   ├── contoh_input/
 │   │   └── image.png
+│   ├── demo_terminal_init.png   ← Bukti inisialisasi & validasi data
+│   ├── demo_terminal_autofill.png ← Bukti pengisian & submit form
 │   ├── demo.png
 │   └── screenshot.png
 │
