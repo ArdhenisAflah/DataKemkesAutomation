@@ -237,7 +237,7 @@ for index, row in df_to_process.iterrows():
         print("   - Memilih jenis institusi 'Puskesmas'...")
         Select(driver.find_element(By.NAME, 'penyelenggara')).select_by_value('Puskesmas')
         # ### <<< INI BAGIAN YANG DITAMBAHKAN INSTITUSI NAMA >>> ###
-        driver.find_element(By.ID, 'nama_institusi').send_keys('Puskesmas SERPONG II')
+        driver.find_element(By.ID, 'nama_institusi').send_keys('Puskesmas Contoh')
 
         # ### <<< BLOK LOGIKA STATUS MENIKAH (SESUAI ATURAN BARU) >>> ###
         print("   - Menerapkan logika untuk status menikah...")

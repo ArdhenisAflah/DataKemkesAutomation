@@ -157,7 +157,7 @@ cell_style(ws["A1"], bold=True, bg=BIRU_TUA, align="center", font_color="FFFFFF"
 ws.row_dimensions[1].height = 22
 
 ws.merge_cells("A2:P2")
-ws["A2"] = "PUSKESMAS SERPONG II — DINAS KESEHATAN KOTA TANGERANG SELATAN"
+ws["A2"] = "PUSKESMAS CONTOH — DINAS KESEHATAN KABUPATEN/KOTA"
 cell_style(ws["A2"], bold=True, bg=BIRU_TUA, align="center", font_color="FFFFFF", size=11)
 ws.row_dimensions[2].height = 18
 

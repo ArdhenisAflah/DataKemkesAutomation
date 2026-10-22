@@ -475,8 +475,9 @@ try:
             # 17. Nama Institusi (Puskesmas)
             el_inst = driver.find_element(By.ID, 'nama_institusi')
             el_inst.clear()
-            el_inst.send_keys('SERPONG II')
-            log.info("  ✓ Nama Institusi   : SERPONG II")
+            nama_institusi = os.getenv('NAMA_PUSKESMAS', 'PUSKESMAS CONTOH')
+            el_inst.send_keys(nama_institusi)
+            log.info(f"  ✓ Nama Institusi   : {nama_institusi}")
 
             # 18. Isi 10 soal kuesioner EPDS sesuai template yang dipilih
             log.info(f"  Mengisi EPDS [{template_key}, skor≈{skor}]:")

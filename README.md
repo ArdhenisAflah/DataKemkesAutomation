@@ -237,7 +237,7 @@ Script menggunakan 3 template jawaban yang dipilih secara acak per pasien. Semua
 - Jika proses terputus, set `START_INDEX` ke nomor baris terakhir yang berhasil lalu jalankan ulang
 - File Excel data pasien **tidak diupload ke GitHub** — bersifat rahasia/sensitif
 - Versi ChromeDriver **harus sesuai** dengan versi Google Chrome yang terinstall
-- Script ini **hanya untuk Puskesmas SERPONG II** — field alamat, institusi, dan wilayah sudah di-hardcode
+- Script ini dikonfigurasi untuk Puskesmas percontohan — field alamat, institusi, dan wilayah dapat disesuaikan pada file konfigurasi / script
 
 ---
 

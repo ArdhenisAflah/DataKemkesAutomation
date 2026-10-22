@@ -552,9 +552,9 @@ try:
         except NoSuchElementException:
             print(f"   - ⚠️ Opsi pendidikan '{pendidikan_dipilih}' tidak ditemukan.")
 
-        print("   - Memilih institusi: Puskesmas SERPONG II")
+        print("   - Memilih institusi: Puskesmas Contoh")
         Select(driver.find_element(By.NAME, 'penyelenggara')).select_by_value('Puskesmas')
-        driver.find_element(By.ID, 'nama_institusi').send_keys('Puskesmas SERPONG II')
+        driver.find_element(By.ID, 'nama_institusi').send_keys('Puskesmas Contoh')
 
         print("   - Status menikah: Menikah")
         Select(driver.find_element(By.ID, 'status_nikah')).select_by_value("Menikah")
